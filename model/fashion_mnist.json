@@ -94,38 +94,46 @@
     ]
   },
   {
-    "name": "dense_9",
+    "name": "dropout_9",
+    "type": "Dropout",
+    "config": {
+      "rate": 0.3
+    },
+    "weights": []
+  },
+  {
+    "name": "dense_10",
     "type": "Dense",
     "config": {
       "activation": "relu"
     },
     "weights": [
-      "W_9",
-      "b_9"
+      "W_10",
+      "b_10"
     ]
   },
   {
-    "name": "bn_10",
+    "name": "bn_11",
     "type": "BatchNormalization",
     "config": {
       "epsilon": 0.001
     },
     "weights": [
-      "gamma_10",
-      "beta_10",
-      "mean_10",
-      "var_10"
+      "gamma_11",
+      "beta_11",
+      "mean_11",
+      "var_11"
     ]
   },
   {
-    "name": "dense_11",
+    "name": "dense_12",
     "type": "Dense",
     "config": {
       "activation": "softmax"
     },
     "weights": [
-      "W_11",
-      "b_11"
+      "W_12",
+      "b_12"
     ]
   }
 ]
