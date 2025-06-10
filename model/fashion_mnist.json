@@ -1,0 +1,41 @@
+[
+  {
+    "name": "flatten_0",
+    "type": "Flatten",
+    "config": {},
+    "weights": []
+  },
+  {
+    "name": "dense_1",
+    "type": "Dense",
+    "config": {
+      "activation": "relu"
+    },
+    "weights": [
+      "W_1",
+      "b_1"
+    ]
+  },
+  {
+    "name": "dense_2",
+    "type": "Dense",
+    "config": {
+      "activation": "relu"
+    },
+    "weights": [
+      "W_2",
+      "b_2"
+    ]
+  },
+  {
+    "name": "dense_3",
+    "type": "Dense",
+    "config": {
+      "activation": "softmax"
+    },
+    "weights": [
+      "W_3",
+      "b_3"
+    ]
+  }
+]
