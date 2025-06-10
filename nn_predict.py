@@ -8,18 +8,9 @@ def relu(x):
 
 def softmax(x):
     # TODO: Implement the SoftMax function
-    if x.ndim == 1:
-        # 單一樣本
-        x = x - np.max(x)
-        e_x = np.exp(x)
-        return e_x / np.sum(e_x)
-    elif x.ndim == 2:
-        # 多個樣本
-        x = x - np.max(x, axis=1, keepdims=True)
-        e_x = np.exp(x)
-        return e_x / np.sum(e_x, axis=1, keepdims=True)
-    else:
-        raise ValueError("Input must be 1D or 2D numpy array")
+    e = np.exp(x - np.max(x, axis=-1, keepdims=True))
+    out = e / np.sum(e, axis=-1, keepdims=True)
+    return out if x.ndim == 2 else out[np.newaxis, :]
 
 
 # === Flatten ===
