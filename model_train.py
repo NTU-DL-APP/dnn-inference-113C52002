@@ -1,7 +1,9 @@
 import tensorflow as tf
 from tensorflow.keras.models import Sequential,load_model
-from tensorflow.keras.layers import Flatten, Dense
+from tensorflow.keras.layers import Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.datasets import fashion_mnist
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
 import json
 import numpy as np
 import os
@@ -21,14 +23,22 @@ x_test = x_test.astype('float32') / 255.0
 # 建立模型
 model = Sequential([
     Flatten(input_shape=(28, 28)),
+    Dense(256, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.3),
     Dense(128, activation='relu'),
+    BatchNormalization(),
+    Dropout(0.3),
     Dense(64, activation='relu'),
+    BatchNormalization(),
     Dense(10, activation='softmax')
 ])
 
-# 編譯 & 訓練
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, epochs=10, validation_split=0.1)
+# 編譯 & 訓練 & 自動停止過擬合階段
+opt = Adam(learning_rate=0.0005)
+model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+model.fit(x_train, y_train, epochs=100, validation_split=0.1, callbacks=[early_stop])
 
 # 評估測試集
 test_loss, test_acc = model.evaluate(x_test, y_test)

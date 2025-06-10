@@ -17,25 +17,36 @@
     ]
   },
   {
-    "name": "dense_2",
+    "name": "dense_4",
     "type": "Dense",
     "config": {
       "activation": "relu"
     },
     "weights": [
-      "W_2",
-      "b_2"
+      "W_4",
+      "b_4"
     ]
   },
   {
-    "name": "dense_3",
+    "name": "dense_7",
+    "type": "Dense",
+    "config": {
+      "activation": "relu"
+    },
+    "weights": [
+      "W_7",
+      "b_7"
+    ]
+  },
+  {
+    "name": "dense_9",
     "type": "Dense",
     "config": {
       "activation": "softmax"
     },
     "weights": [
-      "W_3",
-      "b_3"
+      "W_9",
+      "b_9"
     ]
   }
 ]
