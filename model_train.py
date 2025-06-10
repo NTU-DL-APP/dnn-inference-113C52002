@@ -29,6 +29,8 @@ model = Sequential([
     Dense(128, activation='relu'),
     BatchNormalization(),
     Dropout(0.3),
+    Dense(128, activation='relu'),
+    BatchNormalization(),
     Dense(64, activation='relu'),
     BatchNormalization(),
     Dense(10, activation='softmax')

@@ -97,11 +97,35 @@
     "name": "dense_9",
     "type": "Dense",
     "config": {
-      "activation": "softmax"
+      "activation": "relu"
     },
     "weights": [
       "W_9",
       "b_9"
+    ]
+  },
+  {
+    "name": "bn_10",
+    "type": "BatchNormalization",
+    "config": {
+      "epsilon": 0.001
+    },
+    "weights": [
+      "gamma_10",
+      "beta_10",
+      "mean_10",
+      "var_10"
+    ]
+  },
+  {
+    "name": "dense_11",
+    "type": "Dense",
+    "config": {
+      "activation": "softmax"
+    },
+    "weights": [
+      "W_11",
+      "b_11"
     ]
   }
 ]
