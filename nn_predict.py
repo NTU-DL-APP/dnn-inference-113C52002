@@ -24,6 +24,18 @@ def flatten(x):
 def dense(x, W, b):
     return x @ W + b
 
+# === Batch Normalization (inference mode) ===
+def BatchNormalization(x, gamma, beta, moving_mean, moving_variance, epsilon=1e-3):
+    x_norm = (x - moving_mean) / np.sqrt(moving_variance + epsilon)
+    return gamma * x_norm + beta
+
+# === Dropout (inference: skip) ===
+def Dropout(x, rate):
+    # During inference, dropout is not applied. Just return x.
+    return x
+
+
+
 # Infer TensorFlow h5 model using numpy
 # Support only Dense, Flatten, relu, softmax now
 def nn_forward_h5(model_arch, weights, data):
@@ -32,18 +44,33 @@ def nn_forward_h5(model_arch, weights, data):
         lname = layer['name']
         ltype = layer['type']
         cfg = layer['config']
-        wnames = layer['weights']
+        wnames = layer.get('weights', [])
 
         if ltype == "Flatten":
             x = flatten(x)
+        
         elif ltype == "Dense":
             W = weights[wnames[0]]
             b = weights[wnames[1]]
             x = dense(x, W, b)
-            if cfg.get("activation") == "relu":
+
+            activation = cfg.get("activation")
+            if activation == "relu":
                 x = relu(x)
-            elif cfg.get("activation") == "softmax":
+            elif activation == "softmax":
                 x = softmax(x)
+
+        elif ltype == "BatchNormalization":
+            gamma = weights[wnames[0]]  # gamma
+            beta = weights[wnames[1]]   # beta
+            moving_mean = weights[wnames[2]]
+            moving_var = weights[wnames[3]]
+            epsilon = cfg.get("epsilon", 1e-3)
+            x = BatchNormalization(x, gamma, beta, moving_mean, moving_var, epsilon)
+
+        elif ltype == "Dropout":
+            rate = cfg.get("rate", 0.5)
+            x = Dropout(x, rate)  # No effect during inference
 
     return x
 

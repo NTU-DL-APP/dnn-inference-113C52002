@@ -17,6 +17,27 @@
     ]
   },
   {
+    "name": "bn_2",
+    "type": "BatchNormalization",
+    "config": {
+      "epsilon": 0.001
+    },
+    "weights": [
+      "gamma_2",
+      "beta_2",
+      "mean_2",
+      "var_2"
+    ]
+  },
+  {
+    "name": "dropout_3",
+    "type": "Dropout",
+    "config": {
+      "rate": 0.3
+    },
+    "weights": []
+  },
+  {
     "name": "dense_4",
     "type": "Dense",
     "config": {
@@ -28,6 +49,27 @@
     ]
   },
   {
+    "name": "bn_5",
+    "type": "BatchNormalization",
+    "config": {
+      "epsilon": 0.001
+    },
+    "weights": [
+      "gamma_5",
+      "beta_5",
+      "mean_5",
+      "var_5"
+    ]
+  },
+  {
+    "name": "dropout_6",
+    "type": "Dropout",
+    "config": {
+      "rate": 0.3
+    },
+    "weights": []
+  },
+  {
     "name": "dense_7",
     "type": "Dense",
     "config": {
@@ -36,6 +78,19 @@
     "weights": [
       "W_7",
       "b_7"
+    ]
+  },
+  {
+    "name": "bn_8",
+    "type": "BatchNormalization",
+    "config": {
+      "epsilon": 0.001
+    },
+    "weights": [
+      "gamma_8",
+      "beta_8",
+      "mean_8",
+      "var_8"
     ]
   },
   {

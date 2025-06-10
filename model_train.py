@@ -35,7 +35,7 @@ model = Sequential([
 ])
 
 # 編譯 & 訓練 & 自動停止過擬合階段
-opt = Adam(learning_rate=0.0005)
+opt = Adam(learning_rate=0.0003)
 model.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 model.fit(x_train, y_train, epochs=100, validation_split=0.1, callbacks=[early_stop])
@@ -52,8 +52,11 @@ model = load_model(model_path)
 
 # 儲存架構為 json
 layers = []
+weights = {}
+
 for i, layer in enumerate(model.layers):
     cfg = layer.get_config()
+
     if isinstance(layer, tf.keras.layers.Flatten):
         layers.append({
             "name": f"flatten_{i}",
@@ -61,6 +64,7 @@ for i, layer in enumerate(model.layers):
             "config": {},
             "weights": []
         })
+
     elif isinstance(layer, tf.keras.layers.Dense):
         act = cfg['activation']
         W, b = layer.get_weights()
@@ -72,20 +76,42 @@ for i, layer in enumerate(model.layers):
             "config": {"activation": act},
             "weights": [w_name, b_name]
         })
-    else:
-        print("Warning: Unsupported layer type")
+        weights[w_name] = W
+        weights[b_name] = b
 
+    elif isinstance(layer, tf.keras.layers.BatchNormalization):
+        gamma, beta, mean, var = layer.get_weights()
+        gamma_name = f"gamma_{i}"
+        beta_name = f"beta_{i}"
+        mean_name = f"mean_{i}"
+        var_name = f"var_{i}"
+        layers.append({
+            "name": f"bn_{i}",
+            "type": "BatchNormalization",
+            "config": {"epsilon": cfg.get("epsilon", 1e-3)},
+            "weights": [gamma_name, beta_name, mean_name, var_name]
+        })
+        weights[gamma_name] = gamma
+        weights[beta_name] = beta
+        weights[mean_name] = mean
+        weights[var_name] = var
+
+    elif isinstance(layer, tf.keras.layers.Dropout):
+        rate = cfg.get("rate", 0.5)
+        layers.append({
+            "name": f"dropout_{i}",
+            "type": "Dropout",
+            "config": {"rate": rate},
+            "weights": []  # Dropout has no weights
+        })
+
+    else:
+        print(f"Warning: Unsupported layer type: {layer}")
+
+# 寫入 JSON
 with open(output_json, 'w') as f:
     json.dump(layers, f, indent=2)
 
-# 儲存權重為 npz
-weights = {}
-for i, layer in enumerate(model.layers):
-    if hasattr(layer, 'get_weights'):
-        w = layer.get_weights()
-        if len(w) == 2:
-            weights[f"W_{i}"] = w[0]
-            weights[f"b_{i}"] = w[1]
+# 寫入 NPZ
 np.savez(output_npz, **weights)
-
 print("模型成功轉換為 JSON + NPZ")
